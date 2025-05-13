@@ -14,6 +14,15 @@ const Achievements = () => {
     const [user, setUser] = useState(null);
     const [friendsLoading, setFriendsLoading] = useState(false);
     const [showMockButton, setShowMockButton] = useState(false); // Стейт для отображения кнопки
+    const [games, setGames] = useState([]);
+    const [selectedGame, setSelectedGame] = useState('zero-dawn');
+
+    useEffect(() => {
+    fetch("http://localhost:5000/api/games")
+        .then(res => res.json())
+        .then(data => setGames(data))
+        .catch(console.error);
+}, []);
 
     // Загрузка достижений пользователя
     useEffect(() => {
@@ -34,8 +43,18 @@ const Achievements = () => {
             });
     }, []);
 
-    const loadAchievements = () => {
-        fetch("http://localhost:5000/api/user/achievements", {
+    const handleGameChange = (gameId) => {
+        setSelectedGame(gameId);
+        setAchievements([]);
+        setFriends([]);
+        setCompareMode(false);
+        setSelectedFriend(null);
+        loadAchievements(gameId);
+    };
+
+    const loadAchievements = (gameId) => {
+        setLoading(true)
+        fetch('http://localhost:5000/api/user/achievements/${gameId}', {
             credentials: 'include'
         })
             .then(res => {
@@ -140,8 +159,23 @@ const Achievements = () => {
                     </button>
                 )}
             </div>
-
-            <h2>{language === 'ru' ? 'Достижения Horizon Zero Dawn' : 'Horizon Zero Dawn Achievements'}</h2>
+            <div className="game-selector">
+                <select 
+                    value={selectedGame}
+                    onChange={(e) => handleGameChange(e.target.value)}
+                >
+                    {games.map(game => (
+                        <option key={game.id} value={game.id}>
+                            {game.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            <h2>
+                {language === 'ru' 
+                    ? `Достижения ${games.find(g => g.id === selectedGame)?.name || ''}` 
+                    : `${games.find(g => g.id === selectedGame)?.name || ''} Achievements`}
+            </h2>
 
             {compareMode && (
                 <div className="friends-section">

@@ -320,3 +320,16 @@
     border: 1px solid #444;
     font-size: 1rem;
 }
+.game-selector {
+    margin-bottom: 1.5rem;
+}
+
+.game-selector select {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background-color: #333;
+    color: white;
+    border: 1px solid #444;
+    font-size: 1rem;
+    min-width: 250px;
+}

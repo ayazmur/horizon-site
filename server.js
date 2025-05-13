@@ -7,7 +7,16 @@ const SteamStrategy = require('passport-steam').Strategy;
 
 const app = express();
 const PORT = 5000;
-
+const GAMES = {
+    ZERO_DAWN: {
+        APP_ID: "1151640",
+        NAME: "Horizon Zero Dawn"
+    },
+    FORBIDDEN_WEST: {
+        APP_ID: "2420110",
+        NAME: "Horizon Forbidden West"
+    }
+};
 // Конфигурация сессий
 app.use(session({
     secret: 'your_secret_key',
@@ -67,13 +76,15 @@ app.get('/auth/logout', (req, res) => {
 });
 
 // Получение достижений пользователя
-app.get("/api/user/achievements", async (req, res) => {
+app.get("/api/user/achievements/:gameId", async (req, res) => {
     if (!req.user) {
         return res.status(401).json({ error: "Not authenticated" });
     }
 
     const API_KEY = "699DDC06199E5195CFEDF670B8AB9586";
-    const APP_ID = "1151640";
+    const APP_ID = req.params.gameId === 'forbidden-west' 
+        ? GAMES.FORBIDDEN_WEST.APP_ID 
+        : GAMES.ZERO_DAWN.APP_ID;
     const STEAM_ID = req.user.id;
 
     try {
@@ -105,8 +116,8 @@ app.get("/api/user/achievements", async (req, res) => {
                 ...ach,
                 unlocked: playerAch ? playerAch.achieved === 1 : false,
                 unlockTime: playerAch ? playerAch.unlocktime : null,
-                guideText: getGuideText(ach.name),
-                videoUrl: getVideoUrl(ach.name)
+                guideText: getGuideText(ach.name, req.params.gameId),
+                videoUrl: getVideoUrl(ach.name, req.params.gameId)
             };
         });
 
@@ -115,15 +126,30 @@ app.get("/api/user/achievements", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
-
+app.get("/api/games", (req, res) => {
+    res.json([
+        { 
+            id: 'zero-dawn', 
+            name: 'Horizon Zero Dawn', 
+            appId: GAMES.ZERO_DAWN.APP_ID 
+        },
+        { 
+            id: 'forbidden-west', 
+            name: 'Horizon Forbidden West', 
+            appId: GAMES.FORBIDDEN_WEST.APP_ID 
+        }
+    ]);
+});
 // Получение достижений всех друзей
-app.get("/api/friends/achievements", async (req, res) => {
+app.get("/api/friends/achievements/:gameId", async (req, res) => {
     if (!req.user) {
         return res.status(401).json({ error: "Not authenticated" });
     }
 
     const API_KEY = "699DDC06199E5195CFEDF670B8AB9586";
-    const APP_ID = "1151640";
+    const APP_ID = req.params.gameId === 'forbidden-west' 
+        ? GAMES.FORBIDDEN_WEST.APP_ID 
+        : GAMES.ZERO_DAWN.APP_ID;
     const STEAM_ID = req.user.id;
 
     try {
@@ -297,8 +323,8 @@ app.get("/api/achievements", async (req, res) => {
 
         const enhancedAchievements = achievements.map(ach => ({
             ...ach,
-            guideText: getGuideText(ach.name),
-            videoUrl: getVideoUrl(ach.name)
+            guideText: getGuideText(ach.name, 'zero-dawn'), 
+            videoUrl: getVideoUrl(ach.name, 'zero-dawn')
         }));
 
         res.json(enhancedAchievements);
@@ -308,21 +334,36 @@ app.get("/api/achievements", async (req, res) => {
 });
 
 // Хелперы
-function getGuideText(achievementName) {
+function getGuideText(achievementName, gameId) {
     const guides = {
-        "ACH_WELCOME": "Начните игру, чтобы получить это достижение",
-        "ACH_MAIN_STORY": "Завершите основную сюжетную линию",
-        "ACH_ALL_MACHINES": "Победите все типы машин в игре"
+        "zero-dawn": {
+            "ACH_WELCOME": "Начните игру, чтобы получить это достижение",
+            "ACH_MAIN_STORY": "Завершите основную сюжетную линию",
+            "ACH_ALL_MACHINES": "Победите все типы машин в игре"
+        },
+        "forbidden-west": {
+            "ACH_WELCOME": "Начните новое приключение в Forbidden West",
+            "ACH_MAIN_STORY": "Завершите основную сюжетную линию в Forbidden West",
+            "ACH_ALL_MACHINES": "Победите все новые типы машин в Forbidden West"
+        }
     };
-    return guides[achievementName] || null;
+    
+    return guides[gameId]?.[achievementName] || null;
 }
 
-function getVideoUrl(achievementName) {
+function getVideoUrl(achievementName, gameId) {
     const videos = {
-        "ACH_ALL_MACHINES": "https://youtu.be/example1",
-        "ACH_HARD_MODE": "https://youtu.be/example2"
+        "zero-dawn": {
+            "ACH_ALL_MACHINES": "https://youtu.be/example1",
+            "ACH_HARD_MODE": "https://youtu.be/example2"
+        },
+        "forbidden-west": {
+            "ACH_ALL_MACHINES": "https://youtu.be/example3",
+            "ACH_ULTRA_HARD": "https://youtu.be/example4"
+        }
     };
-    return videos[achievementName] || null;
+    
+    return videos[gameId]?.[achievementName] || null;
 }
 
 function getMockFriends() {
