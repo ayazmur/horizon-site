@@ -1,0 +1,125 @@
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: #eee;
+  font-family: sans-serif;
+}
+
+.game-section {
+  margin-bottom: 3rem;
+  background-color: #1c1c1c;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.game-header {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.game-cover {
+  width: 300px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.game-info {
+  flex: 1;
+}
+
+.game-description {
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+
+.game-meta {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.platforms {
+  display: flex;
+  gap: 1rem;
+}
+
+.platforms span {
+  background-color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.trailers {
+  margin: 2rem 0;
+}
+
+.trailer-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.trailer {
+  width: 100%;
+  border-radius: 8px;
+  background-color: #000;
+}
+
+.requirements {
+  margin-top: 2rem;
+}
+
+.requirements-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.requirement-block {
+  background-color: #222;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.requirement-block pre {
+  white-space: pre-wrap;
+  font-family: sans-serif;
+  line-height: 1.5;
+}
+
+.character-link-container {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.character-link {
+  color: #4dabf7;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.character-link:hover {
+  text-decoration: underline;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #f44336;
+}

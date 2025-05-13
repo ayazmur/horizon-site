@@ -351,6 +351,43 @@ function getMockFriends() {
         }
     ];
 }
+app.get("/api/game/:appid", async (req, res) => {
+    const API_KEY = "699DDC06199E5195CFEDF670B8AB9586";
+    const APP_ID = req.params.appid;
+
+    try {
+        const response = await fetch(
+            `https://store.steampowered.com/api/appdetails?appids=${APP_ID}&cc=us&l=english`
+        );
+
+        if (!response.ok) {
+            return res.status(response.status).json({ error: "Steam API error" });
+        }
+
+        const data = await response.json();
+        const gameData = data[APP_ID]?.data;
+
+        if (!gameData) {
+            return res.status(404).json({ error: "Game not found" });
+        }
+
+        // Форматируем данные для удобства
+        const result = {
+            name: gameData.name,
+            short_description: gameData.short_description,
+            header_image: gameData.header_image,
+            movies: gameData.movies || [],
+            price_overview: gameData.price_overview,
+            platforms: gameData.platforms,
+            pc_requirements: gameData.pc_requirements
+        };
+
+        res.json(result);
+    } catch (err) {
+        console.error("Steam API error:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`Сервер работает на http://localhost:${PORT}`);
