@@ -13,9 +13,10 @@ const Achievements = () => {
     const { language } = useContext(LanguageContext);
     const [user, setUser] = useState(null);
     const [friendsLoading, setFriendsLoading] = useState(false);
-    const [showMockButton, setShowMockButton] = useState(false);
+    const [showMockButton, setShowMockButton] = useState(false); // Стейт для отображения кнопки
+
+    // Загрузка достижений пользователя
     useEffect(() => {
-        // Проверяем, авторизован ли пользователь
         fetch("http://localhost:5000/auth/current_user", {
             credentials: 'include'
         })
@@ -52,41 +53,41 @@ const Achievements = () => {
     };
 
     const loadFriends = () => {
-    setFriendsLoading(true);
-    fetch("http://localhost:5000/api/friends/achievements", {
-        credentials: 'include'
-    })
-        .then(res => {
-            if (!res.ok) throw new Error("Ошибка при загрузке друзей");
-            return res.json();
+        setFriendsLoading(true);
+        fetch("http://localhost:5000/api/friends/achievements", {
+            credentials: 'include'
         })
-        .then(data => {
-            const filtered = data.filter(friend => !friend.error);
-            setFriends(filtered);
-            setFriendsLoading(false);
-            if (filtered.length === 0) {
-                setShowMockButton(true);
-            }
-        })
-        .catch(err => {
-            console.error("Не удалось загрузить друзей", err);
-            setFriendsLoading(false);
-        });
-};
+            .then(res => {
+                if (!res.ok) throw new Error("Ошибка при загрузке друзей");
+                return res.json();
+            })
+            .then(data => {
+                const filtered = data.filter(friend => !friend.error);
+                setFriends(filtered);
+                setFriendsLoading(false);
+                // Если нет друзей с достижениями, показываем кнопку для загрузки моковых друзей
+                setShowMockButton(filtered.length === 0);
+            })
+            .catch(err => {
+                console.error("Не удалось загрузить друзей", err);
+                setFriendsLoading(false);
+            });
+    };
+
     const loadMockFriends = () => {
-    setFriendsLoading(true);
-    fetch("http://localhost:5000/api/friends/mocks")
-        .then(res => res.json())
-        .then(data => {
-            setFriends(data);
-            setFriendsLoading(false);
-            setShowMockButton(false);
-        })
-        .catch(err => {
-            console.error("Ошибка при загрузке моковых друзей", err);
-            setFriendsLoading(false);
-        });
-};
+        setFriendsLoading(true);
+        fetch("http://localhost:5000/api/friends/mocks")
+            .then(res => res.json())
+            .then(data => {
+                setFriends(data);
+                setFriendsLoading(false);
+                setShowMockButton(false); // Скрыть кнопку после загрузки моковых друзей
+            })
+            .catch(err => {
+                console.error("Ошибка при загрузке моковых друзей", err);
+                setFriendsLoading(false);
+            });
+    };
 
     const handleLogin = () => {
         window.location.href = "http://localhost:5000/auth/steam";
@@ -128,8 +129,8 @@ const Achievements = () => {
                             {language === 'ru' ? 'Выйти' : 'Logout'}
                         </button>
                         <button onClick={toggleCompareMode} className="compare-button">
-                            {compareMode 
-                                ? (language === 'ru' ? 'Закрыть сравнение' : 'Close comparison') 
+                            {compareMode
+                                ? (language === 'ru' ? 'Закрыть сравнение' : 'Close comparison')
                                 : (language === 'ru' ? 'Сравнить с друзьями' : 'Compare with friends')}
                         </button>
                     </div>
@@ -141,64 +142,62 @@ const Achievements = () => {
             </div>
 
             <h2>{language === 'ru' ? 'Достижения Horizon Zero Dawn' : 'Horizon Zero Dawn Achievements'}</h2>
-            
-            {compareMode && (
-    <div className="friends-section">
-        {friendsLoading ? (
-            <p>{language === 'ru' ? 'Загрузка списка друзей...' : 'Loading friends list...'}</p>
-        ) : friends.length > 0 ? (
-            <div className="friends-selector">
-                <select 
-                    onChange={(e) => setSelectedFriend(e.target.value)}
-                    value={selectedFriend || ""}
-                >
-                    <option value="">{language === 'ru' ? 'Выберите друга' : 'Select a friend'}</option>
-                    {friends.map(friend => (
-                        <option key={friend.id} value={friend.id}>
-                            {friend.name}
-                        </option>
-                    ))}
-                </select>
-                
-                {selectedFriend && (
-                    <div className="selected-friend-info">
-                        <img 
-                            src={friends.find(f => f.id === selectedFriend)?.avatar} 
-                            alt="Friend avatar" 
-                            className="friend-avatar" 
-                        />
-                        <span>{friends.find(f => f.id === selectedFriend)?.name}</span>
-                        <a 
-                            href={friends.find(f => f.id === selectedFriend)?.profileUrl} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="friend-profile-link"
-                        >
-                            {language === 'ru' ? 'Профиль Steam' : 'Steam Profile'}
-                        </a>
-                    </div>
-                )}
-            </div>
-        ) : (
-            <>
-                <p>{language === 'ru'
-                    ? 'У вас нет друзей в Steam или они не играли в эту игру'
-                    : 'You have no Steam friends or they haven’t played this game'}
-                </p>
 
-                {showMockButton && (
-                    <button
-                        onClick={loadMockFriends}
-                        className="steam-login-button"
-                        style={{ marginTop: "1rem" }}
-                    >
-                        {language === 'ru' ? 'Загрузить пример друзей' : 'Load mock friends'}
-                    </button>
-                )}
-            </>
-        )}
-    </div>
-)}
+            {compareMode && (
+                <div className="friends-section">
+                    {friendsLoading ? (
+                        <p>{language === 'ru' ? 'Загрузка списка друзей...' : 'Loading friends list...'}</p>
+                    ) : friends.length > 0 ? (
+                        <div className="friends-selector">
+                            <select 
+                                onChange={(e) => setSelectedFriend(e.target.value)}
+                                value={selectedFriend || ""}
+                            >
+                                <option value="">{language === 'ru' ? 'Выберите друга' : 'Select a friend'}</option>
+                                {friends.map(friend => (
+                                    <option key={friend.id} value={friend.id}>
+                                        {friend.name}
+                                    </option>
+                                ))}
+                            </select>
+
+                            {selectedFriend && (
+                                <div className="selected-friend-info">
+                                    <img 
+                                        src={friends.find(f => f.id === selectedFriend)?.avatar} 
+                                        alt="Friend avatar" 
+                                        className="friend-avatar" 
+                                    />
+                                    <span>{friends.find(f => f.id === selectedFriend)?.name}</span>
+                                    <a 
+                                        href={friends.find(f => f.id === selectedFriend)?.profileUrl} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="friend-profile-link"
+                                    >
+                                        {language === 'ru' ? 'Профиль Steam' : 'Steam Profile'}
+                                    </a>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <>
+                            <p>{language === 'ru' 
+                                ? 'У вас нет друзей в Steam или они не играли в эту игру' 
+                                : 'You have no Steam friends or they haven’t played this game'}
+                            </p>
+
+                            <button
+                                onClick={loadMockFriends}
+                                className="steam-login-button"
+                                style={{ marginTop: "1rem" }}
+                            >
+                                {language === 'ru' ? 'Загрузить пример друзей' : 'Load mock friends'}
+                            </button>
+                        </>
+                    )}
+                </div>
+            )}
 
             <ul className="achievements-list">
                 {achievements.map(ach => (
@@ -228,16 +227,10 @@ const Achievements = () => {
                 ))}
             </ul>
 
-            {/* Модальное окно */}
             {selectedAchievement && (
                 <div className="modal-overlay" onClick={() => setSelectedAchievement(null)}>
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
-                        <button 
-                            className="modal-close"
-                            onClick={() => setSelectedAchievement(null)}
-                        >
-                            &times;
-                        </button>
+                        <button className="modal-close" onClick={() => setSelectedAchievement(null)}>&times;</button>
                         
                         <div className="modal-header">
                             <img 
