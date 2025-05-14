@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/horizon-site/static/css/main.7043876e.css",
+    "main.js": "/horizon-site/static/js/main.7cc644a3.js",
+    "index.html": "/horizon-site/index.html",
+    "main.7043876e.css.map": "/horizon-site/static/css/main.7043876e.css.map",
+    "main.7cc644a3.js.map": "/horizon-site/static/js/main.7cc644a3.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7043876e.css",
+    "static/js/main.7cc644a3.js"
+  ]
+}
