@@ -16,7 +16,7 @@ export default function App() {
         <div>
           <Link to="/">{language === 'ru' ? 'Главная' : 'Home'}</Link>
           <Link to="/heroine">{language === 'ru' ? 'Герои' : 'Heroes'}</Link>
-          <Link to="/robots">{language === 'ru' ? 'Роботы' : 'Robots'}</Link>
+          {/* <Link to="/robots">{language === 'ru' ? 'Роботы' : 'Robots'}</Link> */}
           <Link to="/achievements">{language === 'ru' ? 'Достижения' : 'Achievements'}</Link>
           <button onClick={toggleLanguage} className="language-toggle">
             {language === 'ru' ? 'EN' : 'RU'}
@@ -27,7 +27,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/heroine" element={<Heroine />} />
-          <Route path="/robots" element={<Robots />} />
+          {/* <Route path="/robots" element={<Robots />} /> */}
           <Route path="/achievements" element={<Achievements />} />
         </Routes>
       </main>

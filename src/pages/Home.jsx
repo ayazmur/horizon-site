@@ -84,18 +84,22 @@ export default function Home() {
           )}
 
           <div className="requirements">
-            <h3>Системные требования</h3>
-            <div className="requirements-grid">
-              <div className="requirement-block">
-                <h4>Минимальные</h4>
-                <pre>{gameData.zeroDawn.pc_requirements?.minimum || "Информация недоступна"}</pre>
-              </div>
-              <div className="requirement-block">
-                <h4>Рекомендуемые</h4>
-                <pre>{gameData.zeroDawn.pc_requirements?.recommended || "Информация недоступна"}</pre>
-              </div>
+          <h3>Системные требования</h3>
+          <div className="requirements-grid">
+            <div className="requirement-block">
+              <h4>Минимальные</h4>
+              <div 
+                dangerouslySetInnerHTML={{ __html: gameData.zeroDawn.pc_requirements?.minimum || "Информация недоступна" }} 
+              />
+            </div>
+            <div className="requirement-block">
+              <h4>Рекомендуемые</h4>
+              <div 
+                dangerouslySetInnerHTML={{ __html: gameData.zeroDawn.pc_requirements?.recommended || "Информация недоступна" }} 
+              />
             </div>
           </div>
+</div>
         </section>
       )}
       
@@ -141,11 +145,15 @@ export default function Home() {
             <div className="requirements-grid">
               <div className="requirement-block">
                 <h4>Минимальные</h4>
-                <pre>{gameData.forbiddenWest.pc_requirements?.minimum || "Информация недоступна"}</pre>
+                <div 
+                  dangerouslySetInnerHTML={{ __html: gameData.zeroDawn.pc_requirements?.minimum || "Информация недоступна" }} 
+                />
               </div>
               <div className="requirement-block">
                 <h4>Рекомендуемые</h4>
-                <pre>{gameData.forbiddenWest.pc_requirements?.recommended || "Информация недоступна"}</pre>
+                <div 
+                  dangerouslySetInnerHTML={{ __html: gameData.zeroDawn.pc_requirements?.recommended || "Информация недоступна" }} 
+                />
               </div>
             </div>
           </div>

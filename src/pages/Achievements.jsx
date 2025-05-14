@@ -13,7 +13,7 @@ const Achievements = () => {
     const { language } = useContext(LanguageContext);
     const [user, setUser] = useState(null);
     const [friendsLoading, setFriendsLoading] = useState(false);
-    const [showMockButton, setShowMockButton] = useState(false); // Стейт для отображения кнопки
+    const [showMockButton, setShowMockButton] = useState(false); 
     const [games, setGames] = useState([]);
     const [selectedGame, setSelectedGame] = useState('zero-dawn');
 
@@ -24,7 +24,6 @@ const Achievements = () => {
         .catch(console.error);
 }, []);
 
-    // Загрузка достижений пользователя
     useEffect(() => {
         fetch("http://localhost:5000/auth/current_user", {
             credentials: 'include'
@@ -53,23 +52,23 @@ const Achievements = () => {
     };
 
     const loadAchievements = (gameId) => {
-        setLoading(true)
-        fetch('http://localhost:5000/api/user/achievements/${gameId}', {
-            credentials: 'include'
+    setLoading(true);
+    fetch(`http://localhost:5000/api/user/achievements/${gameId}`, {
+        credentials: 'include'
+    })
+        .then(res => {
+            if (!res.ok) throw new Error("Ошибка при загрузке данных");
+            return res.json();
         })
-            .then(res => {
-                if (!res.ok) throw new Error("Ошибка при загрузке данных");
-                return res.json();
-            })
-            .then(data => {
-                setAchievements(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                setError("Не удалось загрузить достижения");
-                setLoading(false);
-            });
-    };
+        .then(data => {
+            setAchievements(data);
+            setLoading(false);
+        })
+        .catch(err => {
+            setError("Не удалось загрузить достижения");
+            setLoading(false);
+        });
+};
 
     const loadFriends = () => {
         setFriendsLoading(true);
@@ -84,7 +83,6 @@ const Achievements = () => {
                 const filtered = data.filter(friend => !friend.error);
                 setFriends(filtered);
                 setFriendsLoading(false);
-                // Если нет друзей с достижениями, показываем кнопку для загрузки моковых друзей
                 setShowMockButton(filtered.length === 0);
             })
             .catch(err => {
@@ -100,7 +98,7 @@ const Achievements = () => {
             .then(data => {
                 setFriends(data);
                 setFriendsLoading(false);
-                setShowMockButton(false); // Скрыть кнопку после загрузки моковых друзей
+                setShowMockButton(false); 
             })
             .catch(err => {
                 console.error("Ошибка при загрузке моковых друзей", err);

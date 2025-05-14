@@ -45,7 +45,6 @@
     font-size: 0.9rem;
     color: #ccc;
   }
-  /* Стили для модального окна */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -115,7 +114,6 @@
 .video-guide a:hover {
   text-decoration: underline;
 }
-/* Модальное окно */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -182,7 +180,6 @@
   text-decoration: underline;
 }
 
-/* Добавьте эти стили в конец файла */
 
 .user-panel {
     margin-bottom: 2rem;
